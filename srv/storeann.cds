@@ -1,43 +1,89 @@
-namespace com.sa.electronicstore;
-using { cuid,managed } from '@sap/cds/common';
+using { com.saibharath.electronicstore as db } from '../db/schema';
 
-@assert.unique:{
-   businesspartner_number  :[ businesspartner_number]
+//services and projections
+service StoreS {
+
+    entity Store as projection on db.Store;
+
+}
+//create button
+annotate StoreS.Store with @odata.draft.enabled ;
+ 
+
+
+//validations
+
+annotate StoreS.Store with {
+   pincode     @assert.format: '^[1-9]\d{2}( ?\d{3})?$';
 }
 
 
-entity BusinessPartner : cuid,managed {
-    @title : 'Business Partner Number'
-    businesspartner_number : String(10);
-    @title : 'Name'
-    name : String(10) @mandatory;
-    @title : 'Address 1'
-    address1 : String(20) @mandatory;
-    @title : 'Address 2'
-    address2 : String(20) @mandatory;
-     @title : 'City'
-    city : String(20) @mandatory;
-      @title:'State'
-    state:Association to States;
-
-    @title : 'PIN Code'
-    pincode : String(20) @mandatory;
-    @title : 'Do you Registerd for GSTN '
-    is_gstn_reg : Boolean default false;
-    @title : 'GSTIN Number'
-    gstin_number : String(20) @mandatory;
-     @title : ' Are you a vendor'
-    Is_vendor: Boolean default false;
-     @title : 'Are you a customer'
-    Is_customer: Boolean default false;
-}
-
-
-@cds.persistence.skip
-entity States {
-    @title:'code'
-    key code: String(3);
-    @title:'description'
-    description:String(10);
-    
-}
+//annotations for Business partner
+annotate StoreS.Store with @(
+    UI.LineItem : [
+        {
+            $Type : 'UI.DataField',
+            Value: store_id
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: name
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: address1
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: address2
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: city
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: pincode
+        },
+        
+    ],
+    UI.FieldGroup #StoreInformation : {
+        Data:[
+        {
+            $Type : 'UI.DataField',
+            Value: store_id
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: name
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: address1
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: address2
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: city
+        },
+         {
+            $Type : 'UI.DataField',
+            Value: pincode
+        },
+         
+         
+        ]
+    },
+    UI.Facets : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            ID : 'BusinessP',
+            Label: 'Store Information',
+            Target: '@UI.FieldGroup#StoreInformation',
+        }
+    ],
+      
+);
