@@ -1,4 +1,4 @@
-namespace com.saikiran.electronicstore;
+namespace com.sa.electronicstore;
 using { cuid,managed } from '@sap/cds/common';
 
 @assert.unique:{
