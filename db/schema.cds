@@ -17,12 +17,28 @@ entity BusinessPartner : cuid,managed {
     address2 : String(20) @mandatory;
      @title : 'City'
     city : String(20) @mandatory;
-   /*   @title : 'State'
-    state : String(20) @mandatory;*/
-      @title : 'PIN Code'
+      @title:'State'
+    state:Association to States;
+
+    @title : 'PIN Code'
     pincode : String(20) @mandatory;
-       @title : 'GSTIN Number'
+    @title : 'Do you Registerd for GSTN '
+    is_gstn_reg : Boolean default false;
+    @title : 'GSTIN Number'
     gstin_number : String(20) @mandatory;
+     @title : ' Are you a vendor'
+    Is_vendor: Boolean default false;
+     @title : 'Are you a customer'
+    Is_customer: Boolean default false;
     
 }
-//schemafile
+
+
+@cds.persistence.skip
+entity States {
+    @title:'code'
+    key code: String(3);
+    @title:'description'
+    description:String(10);
+    
+}
